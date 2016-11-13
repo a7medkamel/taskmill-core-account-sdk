@@ -1,0 +1,26 @@
+{
+  "name": "taskmill-core-account-sdk",
+  "version": "0.0.1",
+  "description": "lib to make calls to taskmill-core-account service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/a7medkamel/taskmill-core-account-sdk.git"
+  },
+  "author": "a7medkamel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/a7medkamel/taskmill-core-account-sdk/issues"
+  },
+  "homepage": "https://github.com/a7medkamel/taskmill-core-account-sdk#readme",
+  "dependencies": {
+    "bluebird": "^3.4.6",
+    "config-url": "git+https://github.com/a7medkamel/config-url.git",
+    "lodash": "^4.15.0",
+    "request-promise": "^2.0.1",
+    "url-join": "0.0.1"
+  }
+}
