@@ -38,7 +38,22 @@ function issueTokenByUsername(hostname, name, options) {
           });
 }
 
+function findAccountById(sub, options) {
+  return Promise
+          .resolve(rp.get({ url : urljoin(url || options.url, '/account', sub), json : true }))
+          .then((result) => {
+            return result.data;
+          })
+          .catch(errors.StatusCodeError, { statusCode : 404 }, (err) => {
+            throw new Error('not found');
+          })
+          .catch(errors.StatusCodeError, (err) => {
+            throw new Error('not allowed');
+          });
+}
+
 module.exports = {
     issueTokenById        : issueTokenById
   , issueTokenByUsername  : issueTokenByUsername
+  , findAccountById       : findAccountById
 };
