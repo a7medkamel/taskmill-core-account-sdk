@@ -10,7 +10,7 @@ var Promise         = require('bluebird')
 
 const url = config.has('account')? config.getUrl('account') : undefined;
 
-function issueTokenById(id, options) {
+function issueTokenById(id, options = {}) {
   return Promise
           .resolve(rp.get({ url : urljoin(url || options.url, '/account', id, '/token'), json : true }))
           .then((result) => {
@@ -24,7 +24,7 @@ function issueTokenById(id, options) {
           });
 }
 
-function issueTokenByUsername(hostname, name, options) {
+function issueTokenByUsername(hostname, name, options = {}) {
   return Promise
           .resolve(rp.get({ url : urljoin(url || options.url, '/account', hostname, name, '/token'), json : true }))
           .then((result) => {
@@ -38,9 +38,24 @@ function issueTokenByUsername(hostname, name, options) {
           });
 }
 
-function findAccountById(sub, options) {
+// todo [akamel] rename auth header from token to bearer
+function findAccountById(sub, options = {}) {
   return Promise
-          .resolve(rp.get({ url : urljoin(url || options.url, '/account', sub), json : true }))
+          .resolve(rp.get({ url : urljoin(url || options.url, '/account', sub), json : true, headers : { authorization : options.token } }))
+          .then((result) => {
+            return result.data;
+          })
+          .catch(errors.StatusCodeError, { statusCode : 404 }, (err) => {
+            throw new Error('not found');
+          })
+          .catch(errors.StatusCodeError, (err) => {
+            throw new Error('not allowed');
+          });
+}
+
+function findAccount(options = {}) {
+  return Promise
+          .resolve(rp.get({ url : urljoin(url || options.url, '/account'), json : true, headers : { authorization : options.bearer } }))
           .then((result) => {
             return result.data;
           })
@@ -56,4 +71,5 @@ module.exports = {
     issueTokenById        : issueTokenById
   , issueTokenByUsername  : issueTokenByUsername
   , findAccountById       : findAccountById
+  , findAccount           : findAccount
 };
