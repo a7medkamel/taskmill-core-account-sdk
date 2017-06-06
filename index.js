@@ -40,6 +40,10 @@ function issueTokenByUsername(hostname, name, options = {}) {
 
 // todo [akamel] rename auth header from token to bearer
 function findAccountById(sub, options = {}) {
+  if (options.bearer) {
+    options.token = options.bearer;
+  }
+
   return Promise
           .resolve(rp.get({ url : urljoin(url || options.url, '/account', sub), json : true, headers : { authorization : options.token } }))
           .then((result) => {
