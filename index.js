@@ -41,6 +41,9 @@ function issueTokenByUsername(hostname, name, options = {}) {
 function issueTokenBySecret(sub, secret, options = {}) {
   return Promise
           .resolve(rp.get({ url : urljoin(url || options.url, '/account', sub, 'secret', secret, '/token'), json : true }))
+          .then((result) => {
+            return result.data;
+          })
           .catch(errors.StatusCodeError, { statusCode : 404 }, (err) => {
             throw new Error('not found');
           })
