@@ -38,6 +38,17 @@ function issueTokenByUsername(hostname, name, options = {}) {
           });
 }
 
+function issueTokenBySecret(sub, secret, options = {}) {
+  return Promise
+          .resolve(rp.get({ url : urljoin(url || options.url, '/account', sub, 'secret', secret, '/token'), json : true }))
+          .catch(errors.StatusCodeError, { statusCode : 404 }, (err) => {
+            throw new Error('not found');
+          })
+          .catch(errors.StatusCodeError, (err) => {
+            throw new Error('not allowed');
+          });
+}
+
 // todo [akamel] rename auth header from token to bearer
 function findAccountById(sub, options = {}) {
   if (options.bearer) {
@@ -74,6 +85,7 @@ function findAccount(options = {}) {
 module.exports = {
     issueTokenById        : issueTokenById
   , issueTokenByUsername  : issueTokenByUsername
+  , issueTokenBySecret    : issueTokenBySecret
   , findAccountById       : findAccountById
   , findAccount           : findAccount
 };
