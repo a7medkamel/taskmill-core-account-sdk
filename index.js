@@ -105,7 +105,7 @@ function findGitToken(options = {}) {
           .then((result) => {
             let account   = result.data
               , provider  = options.provider || account.provider
-              , token     = _.get(account.data, `accounts.${reverseDNS(provider)}._token`);
+              , token     = _.get(account, `accounts.${reverseDNS(provider)}._token`);
 
             return { data : { token } };
           });
