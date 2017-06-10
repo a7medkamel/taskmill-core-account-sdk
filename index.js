@@ -89,9 +89,19 @@ function findAccount(options = {}) {
           });
 }
 
-function findGitToken(sub, options = {}) {
-  return Promise
-          .resolve(rp.get({ url : urljoin(url || options.url, '/account', sub, 'git_token'), json : true, headers : { authorization : options.bearer } }))
+function reverseDNS(provider) {
+  return _.chain(provider).split('.').reverse().join('.').value();
+}
+
+function findGitToken(options = {}) {
+  return findAccount()
+          .then((result) => {
+            let account   = result.data
+              , provider  = options.provider || account.provider
+              , token     = _.get(account.data, `accounts.${reverseDNS(provider)}._token`);
+
+            return { data : { token } };
+          })
           .catch(errors.StatusCodeError, { statusCode : 404 }, (err) => {
             throw new Error('not found');
           })
