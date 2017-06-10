@@ -99,6 +99,10 @@ function reverseDNS(provider) {
 function findGitToken(options = {}) {
   return findAccount(options)
           .then((result) => {
+            // temp until we stop stripping data out
+            return { data : result };
+          })
+          .then((result) => {
             let account   = result.data
               , provider  = options.provider || account.provider
               , token     = _.get(account.data, `accounts.${reverseDNS(provider)}._token`);
