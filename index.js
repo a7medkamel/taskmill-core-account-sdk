@@ -94,7 +94,7 @@ function reverseDNS(provider) {
 }
 
 function findGitToken(options = {}) {
-  return findAccount()
+  return findAccount(options)
           .then((result) => {
             let account   = result.data
               , provider  = options.provider || account.provider
