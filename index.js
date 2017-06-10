@@ -84,6 +84,9 @@ function findAccount(options = {}) {
           .catch(errors.StatusCodeError, { statusCode : 404 }, (err) => {
             throw new Error('not found');
           })
+          .catch(errors.StatusCodeError, { statusCode : 401 }, (err) => {
+            throw new Error('not authorized');
+          })
           .catch(errors.StatusCodeError, (err) => {
             throw new Error('not allowed');
           });
@@ -101,15 +104,6 @@ function findGitToken(options = {}) {
               , token     = _.get(account.data, `accounts.${reverseDNS(provider)}._token`);
 
             return { data : { token } };
-          })
-          .catch(errors.StatusCodeError, { statusCode : 404 }, (err) => {
-            throw new Error('not found');
-          })
-          .catch(errors.StatusCodeError, { statusCode : 401 }, (err) => {
-            throw new Error('not authorized');
-          })
-          .catch(errors.StatusCodeError, (err) => {
-            throw new Error('not allowed');
           });
 }
 
