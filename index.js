@@ -1,18 +1,28 @@
 "use strict";
 
-var Promise         = require('bluebird')
-  , config          = require('config-url')
-  , _               = require('lodash')
-  , rp              = require('request-promise')
-  , urljoin         = require('url-join')
-  , errors          = require('request-promise/errors')
+var Promise                   = require('bluebird')
+  , config                    = require('config-url')
+  , _                         = require('lodash')
+  , rp                        = require('request-promise')
+  , urljoin                   = require('url-join')
+  , errors                    = require('request-promise/errors')
+  , { URL, URLSearchParams }  = require('url')
   ;
 
 const url = config.has('account')? config.getUrl('account') : undefined;
 
 function issueTokenById(id, options = {}) {
+  let base    = url || options.url
+    , uri     = new URL(urljoin(base, '/account', id, '/token'))
+    , search  = new URLSearchParams('')
+    ;
+
+  search.append('expires_in', options.expires_in);
+
+  uri.search = search;
+
   return Promise
-          .resolve(rp.get({ url : urljoin(url || options.url, '/account', id, '/token'), json : true }))
+          .resolve(rp.get({ url : uri.toString(), json : true }))
           .then((result) => {
             return result.data;
           })
@@ -25,8 +35,17 @@ function issueTokenById(id, options = {}) {
 }
 
 function issueTokenByUsername(hostname, name, options = {}) {
+  let base    = url || options.url
+    , uri     = new URL(urljoin(base, '/account', hostname, name, '/token'))
+    , search  = new URLSearchParams('')
+    ;
+
+  search.append('expires_in', options.expires_in);
+
+  uri.search = search;
+
   return Promise
-          .resolve(rp.get({ url : urljoin(url || options.url, '/account', hostname, name, '/token'), json : true }))
+          .resolve(rp.get({ url : uri.toString(), json : true }))
           .then((result) => {
             return result.data;
           })
@@ -39,8 +58,17 @@ function issueTokenByUsername(hostname, name, options = {}) {
 }
 
 function issueTokenBySecret(sub, secret, options = {}) {
+  let base    = url || options.url
+    , uri     = new URL(urljoin(base, '/account', sub, 'secret', secret, '/token'))
+    , search  = new URLSearchParams('')
+    ;
+
+  search.append('expires_in', options.expires_in);
+
+  uri.search = search;
+
   return Promise
-          .resolve(rp.get({ url : urljoin(url || options.url, '/account', sub, 'secret', secret, '/token'), json : true }))
+          .resolve(rp.get({ url : uri.toString(), json : true }))
           .then((result) => {
             if (options.metadata) {
               return result;
