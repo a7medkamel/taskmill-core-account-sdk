@@ -105,6 +105,9 @@ function findGitToken(options = {}) {
           .catch(errors.StatusCodeError, { statusCode : 404 }, (err) => {
             throw new Error('not found');
           })
+          .catch(errors.StatusCodeError, { statusCode : 401 }, (err) => {
+            throw new Error('not authorized');
+          })
           .catch(errors.StatusCodeError, (err) => {
             throw new Error('not allowed');
           });
