@@ -45,7 +45,7 @@ function issueTokenBySecret(sub, secret, options = {}) {
             if (options.metadata) {
               return result;
             }
-            
+
             return result.data;
           })
           .catch(errors.StatusCodeError, { statusCode : 404 }, (err) => {
@@ -89,10 +89,22 @@ function findAccount(options = {}) {
           });
 }
 
+function findGitToken(sub, options = {}) {
+  return Promise
+          .resolve(rp.get({ url : urljoin(url || options.url, '/account', sub, 'git_token'), json : true, headers : { authorization : options.bearer } }))
+          .catch(errors.StatusCodeError, { statusCode : 404 }, (err) => {
+            throw new Error('not found');
+          })
+          .catch(errors.StatusCodeError, (err) => {
+            throw new Error('not allowed');
+          });
+}
+
 module.exports = {
     issueTokenById        : issueTokenById
   , issueTokenByUsername  : issueTokenByUsername
   , issueTokenBySecret    : issueTokenBySecret
   , findAccountById       : findAccountById
   , findAccount           : findAccount
+  , findGitToken          : findGitToken
 };
