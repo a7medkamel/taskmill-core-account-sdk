@@ -21,8 +21,9 @@ function issueTokenById(id, options = {}) {
 
   uri.search = search;
 
-  return Promise
-          .resolve(rp.get({ url : uri.toString(), json : true }))
+  return rp
+          .get({ url : uri.toString(), json : true })
+          .promise()
           .then((result) => {
             return result.data;
           })
@@ -44,9 +45,11 @@ function issueTokenByUsername(hostname, name, options = {}) {
 
   uri.search = search;
 
-  return Promise
-          .resolve(rp.get({ url : uri.toString(), json : true }))
+  return rp
+          .get({ url : uri.toString(), json : true })
+          .promise()
           .then((result) => {
+            console.log(result);
             return result.data;
           })
           .catch(errors.StatusCodeError, { statusCode : 404 }, (err) => {
@@ -54,6 +57,10 @@ function issueTokenByUsername(hostname, name, options = {}) {
           })
           .catch(errors.StatusCodeError, (err) => {
             throw new Error('not allowed');
+          })
+          .catch((err) => {
+            console.error(err);
+            throw err;
           });
 }
 
@@ -67,8 +74,9 @@ function issueTokenBySecret(sub, secret, options = {}) {
 
   uri.search = search;
 
-  return Promise
-          .resolve(rp.get({ url : uri.toString(), json : true }))
+  return rp
+          .get({ url : uri.toString(), json : true })
+          .promise()
           .then((result) => {
             if (options.metadata) {
               return result;
@@ -90,8 +98,9 @@ function findAccountById(sub, options = {}) {
     options.token = options.bearer;
   }
 
-  return Promise
-          .resolve(rp.get({ url : urljoin(url || options.url, '/account', sub), json : true, headers : { authorization : options.token } }))
+  return rp
+          .get({ url : urljoin(url || options.url, '/account', sub), json : true, headers : { authorization : options.token } })
+          .promise()
           .then((result) => {
             return result.data;
           })
@@ -104,8 +113,9 @@ function findAccountById(sub, options = {}) {
 }
 
 function findAccount(options = {}) {
-  return Promise
-          .resolve(rp.get({ url : urljoin(url || options.url, '/account'), json : true, headers : { authorization : options.bearer } }))
+  return rp
+          .get({ url : urljoin(url || options.url, '/account'), json : true, headers : { authorization : options.bearer } })
+          .promise()
           .then((result) => {
             return result.data;
           })
