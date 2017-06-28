@@ -12,12 +12,15 @@ var Promise                   = require('bluebird')
 const url = config.has('account')? config.getUrl('account') : undefined;
 
 function issueTokenById(id, options = {}) {
-  let base    = url || options.url
-    , uri     = new URL(urljoin(base, '/account', id, '/token'))
-    , search  = new URLSearchParams('')
+  let base            = url || options.url
+    , uri             = new URL(urljoin(base, '/account', id, '/token'))
+    , search          = new URLSearchParams('')
+    , { expires_in }  = options
     ;
 
-  search.append('expires_in', options.expires_in);
+  if (expires_in) {
+    search.append('expires_in', expires_in);
+  }
 
   uri.search = search;
 
@@ -36,12 +39,15 @@ function issueTokenById(id, options = {}) {
 }
 
 function issueTokenByUsername(hostname, name, options = {}) {
-  let base    = url || options.url
-    , uri     = new URL(urljoin(base, '/account', hostname, name, '/token'))
-    , search  = new URLSearchParams('')
+  let base            = url || options.url
+    , uri             = new URL(urljoin(base, '/account', hostname, name, '/token'))
+    , search          = new URLSearchParams('')
+    , { expires_in }  = options
     ;
 
-  search.append('expires_in', options.expires_in);
+  if (expires_in) {
+    search.append('expires_in', expires_in);
+  }
 
   uri.search = search;
 
@@ -65,12 +71,15 @@ function issueTokenByUsername(hostname, name, options = {}) {
 }
 
 function issueTokenBySecret(sub, secret, options = {}) {
-  let base    = url || options.url
-    , uri     = new URL(urljoin(base, '/account', sub, 'secret', secret, '/token'))
-    , search  = new URLSearchParams('')
+  let base            = url || options.url
+    , uri             = new URL(urljoin(base, '/account', sub, 'secret', secret, '/token'))
+    , search          = new URLSearchParams('')
+    , { expires_in }  = options
     ;
 
-  search.append('expires_in', options.expires_in);
+  if (expires_in) {
+    search.append('expires_in', expires_in);
+  }
 
   uri.search = search;
 
