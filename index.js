@@ -55,7 +55,6 @@ function issueTokenByUsername(hostname, name, options = {}) {
           .get({ url : uri.toString(), json : true })
           .promise()
           .then((result) => {
-            console.log(result);
             return result.data;
           })
           .catch(errors.StatusCodeError, { statusCode : 404 }, (err) => {
