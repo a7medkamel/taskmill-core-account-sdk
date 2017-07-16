@@ -145,7 +145,7 @@ function reverseDNS(provider) {
 function findGitToken(options = {}) {
   return findAccount(options)
           .then((result) => {
-            // temp until we stop stripping data out
+            // todo [akamel] temp until we stop stripping data out
             return { data : result };
           })
           .then((result) => {
