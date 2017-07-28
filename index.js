@@ -62,10 +62,6 @@ function issueTokenByUsername(hostname, name, options = {}) {
           })
           .catch(errors.StatusCodeError, (err) => {
             throw new Error('not allowed');
-          })
-          .catch((err) => {
-            console.error(err);
-            throw err;
           });
 }
 
