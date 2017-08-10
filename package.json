@@ -19,6 +19,7 @@
   "dependencies": {
     "bluebird": "^3.5.0",
     "config-url": "git+https://github.com/a7medkamel/config-url.git",
+    "jsonwebtoken": "^7.4.2",
     "lodash": "^4.17.4",
     "request": "^2.81.0",
     "request-promise": "^4.2.1",

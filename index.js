@@ -9,6 +9,8 @@ var Promise                   = require('bluebird')
   , { URL, URLSearchParams }  = require('url')
   ;
 
+const jsonwebtoken = require('jsonwebtoken');
+
 const url = config.has('account')? config.getUrl('account') : undefined;
 
 function issueTokenById(id, options = {}) {
@@ -65,29 +67,45 @@ function issueTokenByUsername(hostname, name, options = {}) {
           });
 }
 
-function issueTokenBySecret(sub, secret, options = {}) {
+// function issueTokenBySecret(sub, secret, options = {}) {
+//   let base            = url || options.url
+//     , uri             = new URL(urljoin(base, '/account', sub, 'secret', secret, '/token'))
+//     , search          = new URLSearchParams('')
+//     , { expires_in }  = options
+//     ;
+//
+//   if (expires_in) {
+//     search.append('expires_in', expires_in);
+//   }
+//
+//   uri.search = search;
+//
+//   return rp
+//           .get({ url : uri.toString(), json : true })
+//           .promise()
+//           .then((result) => {
+//             if (options.metadata) {
+//               return result;
+//             }
+//
+//             return result.data;
+//           })
+//           .catch(errors.StatusCodeError, { statusCode : 404 }, (err) => {
+//             throw new Error('not found');
+//           })
+//           .catch(errors.StatusCodeError, (err) => {
+//             throw new Error('not allowed');
+//           });
+// }
+
+function issueTokenByKey(key, options = {}) {
   let base            = url || options.url
-    , uri             = new URL(urljoin(base, '/account', sub, 'secret', secret, '/token'))
-    , search          = new URLSearchParams('')
-    , { expires_in }  = options
+    , uri             = new URL(urljoin(base, '/key', key))
     ;
-
-  if (expires_in) {
-    search.append('expires_in', expires_in);
-  }
-
-  uri.search = search;
 
   return rp
           .get({ url : uri.toString(), json : true })
           .promise()
-          .then((result) => {
-            if (options.metadata) {
-              return result;
-            }
-
-            return result.data;
-          })
           .catch(errors.StatusCodeError, { statusCode : 404 }, (err) => {
             throw new Error('not found');
           })
@@ -153,11 +171,17 @@ function findGitToken(options = {}) {
           });
 }
 
+function decode(jwt) {
+  return jsonwebtoken.decode(jwt);
+}
+
 module.exports = {
     issueTokenById        : issueTokenById
   , issueTokenByUsername  : issueTokenByUsername
-  , issueTokenBySecret    : issueTokenBySecret
+  // , issueTokenBySecret    : issueTokenBySecret
+  , issueTokenByKey       : issueTokenByKey
   , findAccountById       : findAccountById
   , findAccount           : findAccount
   , findGitToken          : findGitToken
+  , decode                : decode
 };
