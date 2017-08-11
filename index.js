@@ -89,7 +89,7 @@ function issueKeyById(id, options = {}) {
     ;
 
   return rp
-          .post({ url : uri.toString(), json : true, headers : { authorization : options.authorization } })
+          .put({ url : uri.toString(), json : true, headers : { authorization : options.authorization } })
           .promise()
           .catch(errors.StatusCodeError, { statusCode : 404 }, (err) => {
             throw new Error('not found');
