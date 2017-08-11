@@ -67,44 +67,29 @@ function issueTokenByUsername(hostname, name, options = {}) {
           });
 }
 
-// function issueTokenBySecret(sub, secret, options = {}) {
-//   let base            = url || options.url
-//     , uri             = new URL(urljoin(base, '/account', sub, 'secret', secret, '/token'))
-//     , search          = new URLSearchParams('')
-//     , { expires_in }  = options
-//     ;
-//
-//   if (expires_in) {
-//     search.append('expires_in', expires_in);
-//   }
-//
-//   uri.search = search;
-//
-//   return rp
-//           .get({ url : uri.toString(), json : true })
-//           .promise()
-//           .then((result) => {
-//             if (options.metadata) {
-//               return result;
-//             }
-//
-//             return result.data;
-//           })
-//           .catch(errors.StatusCodeError, { statusCode : 404 }, (err) => {
-//             throw new Error('not found');
-//           })
-//           .catch(errors.StatusCodeError, (err) => {
-//             throw new Error('not allowed');
-//           });
-// }
-
-function issueTokenByKey(key, options = {}) {
+function issueTokenByKey(sub, key, options = {}) {
   let base            = url || options.url
     , uri             = new URL(urljoin(base, '/key', key))
     ;
 
   return rp
           .get({ url : uri.toString(), json : true })
+          .promise()
+          .catch(errors.StatusCodeError, { statusCode : 404 }, (err) => {
+            throw new Error('not found');
+          })
+          .catch(errors.StatusCodeError, (err) => {
+            throw new Error('not allowed');
+          });
+}
+
+function issueKeyById(key, options = {}) {
+  let base            = url || options.url
+    , uri             = new URL(urljoin(base, '/account', id, '/key'))
+    ;
+
+  return rp
+          .post({ url : uri.toString(), json : true, headers : { authorization : options.authorization } })
           .promise()
           .catch(errors.StatusCodeError, { statusCode : 404 }, (err) => {
             throw new Error('not found');
@@ -180,6 +165,7 @@ module.exports = {
   , issueTokenByUsername  : issueTokenByUsername
   // , issueTokenBySecret    : issueTokenBySecret
   , issueTokenByKey       : issueTokenByKey
+  , issueKeyById          : issueKeyById
   , findAccountById       : findAccountById
   , findAccount           : findAccount
   , findGitToken          : findGitToken
