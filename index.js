@@ -83,7 +83,7 @@ function issueTokenByKey(sub, key, options = {}) {
           });
 }
 
-function issueKeyById(key, options = {}) {
+function issueKeyById(id, options = {}) {
   let base            = url || options.url
     , uri             = new URL(urljoin(base, '/account', id, '/key'))
     ;
