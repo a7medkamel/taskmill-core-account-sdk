@@ -67,7 +67,7 @@ function issueTokenByUsername(hostname, name, options = {}) {
           });
 }
 
-function issueTokenByKey(sub, key, options = {}) {
+function issueTokenByKey(key, options = {}) {
   let base            = url || options.url
     , uri             = new URL(urljoin(base, '/key', key))
     ;
